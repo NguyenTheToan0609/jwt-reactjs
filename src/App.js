@@ -2,6 +2,7 @@ import "./App.scss";
 import Login from "./component/login/login";
 import Nav from "./component/navigation/nav";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Register from "./component/register/register";
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
             </Route>
             <Route exact path="/login">
               <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
             </Route>
             <Route path="/about">About</Route>
             <Route path="/contact">contact</Route>
