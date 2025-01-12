@@ -3,7 +3,8 @@ import Login from "./component/login/login";
 import Nav from "./component/navigation/nav";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Register from "./component/register/register";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <Router>
@@ -26,6 +27,17 @@ function App() {
           </Switch>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Router>
   );
 }
