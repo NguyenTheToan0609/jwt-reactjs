@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./register.scss";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-
+import { registerNewUser } from "../../service/userService";
 const Register = (props) => {
   let history = useHistory();
 
   const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState("");
+  const [username, setUserName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPasword] = useState("");
@@ -37,7 +36,7 @@ const Register = (props) => {
 
       return false;
     }
-    if (!userName) {
+    if (!username) {
       toast.error("Chưa nhập tên");
       setObjCheckInput({ ...defaultValidInput, isValidUsername: false });
       return false;
@@ -60,24 +59,20 @@ const Register = (props) => {
     return true;
   };
 
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/v1/test-api").then((data) => {
-      console.log("check data ", data);
-    });
-  }, []);
-
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let check = isValidInputs();
-    let dataUser = { email, userName, phone, password, confirmPassword };
     if (check === true) {
-      axios.post("http://localhost:8080/api/v1/register", {
-        email,
-        userName,
-        phone,
-        password,
-      });
+      let res = await registerNewUser(email, username, phone, password);
+      let resData = res.data;
+
+      if (resData.EC === 0) {
+        toast.success(resData.EM);
+        history.push("/login");
+      } else {
+        toast.error(resData.EM);
+      }
+      console.log("check res", res);
     }
-    console.log("check data ", dataUser);
   };
 
   return (
@@ -92,7 +87,7 @@ const Register = (props) => {
                 type="text"
                 className={
                   objCheckInput.isValidEmail
-                    ? "form-control mt-2 is-valid"
+                    ? "form-control mt-2 "
                     : "form-control mt-2 is-invalid"
                 }
                 placeholder="Email"
@@ -106,11 +101,11 @@ const Register = (props) => {
                 type="text"
                 className={
                   objCheckInput.isValidUsername
-                    ? "form-control mt-2 is-valid"
+                    ? "form-control mt-2 "
                     : "form-control mt-2 is-invalid"
                 }
                 placeholder="User name"
-                value={userName}
+                value={username}
                 onChange={(event) => setUserName(event.target.value)}
               />
             </div>
@@ -120,7 +115,7 @@ const Register = (props) => {
                 type="text"
                 className={
                   objCheckInput.isValidPhone
-                    ? "form-control mt-2 is-valid"
+                    ? "form-control mt-2 "
                     : "form-control mt-2 is-invalid"
                 }
                 placeholder="Phone number"
@@ -134,7 +129,7 @@ const Register = (props) => {
                 type="password"
                 className={
                   objCheckInput.isValidPassword
-                    ? "form-control mt-2 is-valid"
+                    ? "form-control mt-2 "
                     : "form-control mt-2 is-invalid"
                 }
                 placeholder="Password"
