@@ -1,4 +1,4 @@
-import React, { isValidElement, useState } from "react";
+import React, { isValidElement, useEffect, useRef, useState } from "react";
 import "./login.scss";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,7 +6,6 @@ import { userLogin } from "../../service/userService";
 
 const Login = (props) => {
   let history = useHistory();
-
   const [valueLogin, setValueLogin] = useState("");
   const [password, setPassword] = useState("");
   const defaultValidInput = {
@@ -27,7 +26,6 @@ const Login = (props) => {
     }
     if (!password) {
       setObjCheckInput({ ...defaultValidInput, isValidPassword: false });
-
       toast.error("Chua nhap mat khau");
       return;
     }
@@ -38,12 +36,27 @@ const Login = (props) => {
       let data = { isAuthenticated: true, token: "token fake" };
       sessionStorage.setItem("account", JSON.stringify(data));
       history.push("/users");
+      window.location.reload();
     }
 
     if (dataUser && dataUser.data && dataUser.data.EC !== 0) {
       toast.error(dataUser.data.EM);
     }
   };
+
+  const handleOnKeyPress = (event) => {
+    if (event.keyCode === 13 && event.code === "Enter") {
+      handleLogin();
+    }
+  };
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      history.push("/");
+      window.location.reload();
+    }
+  }, []);
 
   return (
     <div className="login-container">
@@ -79,6 +92,7 @@ const Login = (props) => {
               placeholder="Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              onKeyDown={(event) => handleOnKeyPress(event)}
             />
             <button className="btn btn-primary" onClick={() => handleLogin()}>
               Login
