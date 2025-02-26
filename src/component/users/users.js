@@ -5,7 +5,7 @@ import { fetchListUser, deleteUser } from "../../service/userService";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
-import { set } from "lodash";
+import ModalUser from "./ModalUser";
 
 const Users = (props) => {
   const [listUser, setListUser] = useState([]);
@@ -147,6 +147,8 @@ const Users = (props) => {
         handleConfirmDelete={handleConfirmDelete}
         dataModal={dataModal}
       />
+
+      <ModalUser title={"Create new user"} />
     </>
   );
 };
