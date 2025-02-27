@@ -31,10 +31,27 @@ const ModalUser = (props) => {
 
   const [userData, setUserData] = useState(defaultUserData);
   const [validInputs, setValidInputs] = useState(validInputsDefault);
-
+  const { action, dataModalUser } = props;
   useEffect(() => {
     getGroup();
   }, []);
+
+  useEffect(() => {
+    if (action === "UPDATE") {
+      setUserData({
+        ...dataModalUser,
+        group: dataModalUser.Group ? dataModalUser.Group.id : "",
+      });
+    }
+  }, [dataModalUser]);
+
+  useEffect(() => {
+    if (action === "CREATE") {
+      if (listGroup && listGroup.length > 0) {
+        setUserData({ ...userData, group: listGroup[0].id });
+      }
+    }
+  }, [action]);
 
   const getGroup = async () => {
     let res = await getListGroup();
@@ -85,10 +102,20 @@ const ModalUser = (props) => {
         toast.success(res.data.EM);
         props.onHide();
         setUserData({ ...defaultUserData, group: listGroup[0].id });
-      } else {
+      }
+      if (res.data && res.data.EC !== 0) {
         toast.error(res.data.EM);
+        let _validInputs = _.cloneDeep(validInputsDefault);
+        _validInputs[res.data.DT] = false;
+        setValidInputs(_validInputs);
       }
     }
+  };
+
+  const handleCloseModalUser = () => {
+    props.onHide();
+    setUserData(defaultUserData);
+    setValidInputs(validInputsDefault);
   };
 
   return (
@@ -96,10 +123,14 @@ const ModalUser = (props) => {
       show={props.show}
       size="lg"
       className="modal-user"
-      onHide={props.onHide}
+      onHide={() => handleCloseModalUser()}
     >
       <Modal.Header closeButton>
-        <Modal.Title>{props.title}</Modal.Title>
+        <Modal.Title>
+          <span>
+            {props.action === "CREATE" ? "Create New User" : "Edit User"}
+          </span>
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="content-modal-user row">
@@ -108,6 +139,7 @@ const ModalUser = (props) => {
               Email (<span className="red">*</span>):
             </label>
             <input
+              disabled={action === "CREATE" ? false : true}
               className={
                 validInputs.email ? "form-control" : "form-control is-invalid"
               }
@@ -123,6 +155,7 @@ const ModalUser = (props) => {
               Phone Number (<span className="red">*</span>):
             </label>
             <input
+              disabled={action === "CREATE" ? false : true}
               className={
                 validInputs.phone ? "form-control" : "form-control is-invalid"
               }
@@ -144,23 +177,29 @@ const ModalUser = (props) => {
               }
             />
           </div>
+
           <div className="col-12 col-sm-6 form-group">
-            <label>
-              Password (<span className="red">*</span>):
-            </label>
-            <input
-              className={
-                validInputs.password
-                  ? "form-control"
-                  : "form-control is-invalid"
-              }
-              type="password"
-              value={userData.password}
-              onChange={(event) =>
-                handleOnChangeInput(event.target.value, "password")
-              }
-            />
+            {action === "CREATE" && (
+              <>
+                <label>
+                  Password (<span className="red">*</span>):
+                </label>
+                <input
+                  className={
+                    validInputs.password
+                      ? "form-control"
+                      : "form-control is-invalid"
+                  }
+                  type="password"
+                  value={userData.password}
+                  onChange={(event) =>
+                    handleOnChangeInput(event.target.value, "password")
+                  }
+                />
+              </>
+            )}
           </div>
+
           <div className="col-12 form-group">
             <label>Address:</label>
             <input
@@ -175,6 +214,7 @@ const ModalUser = (props) => {
           <div className="col-6 form-group ">
             <label>Gender:</label>
             <select
+              value={userData.gender}
               className="form-select"
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "gender")
@@ -192,6 +232,7 @@ const ModalUser = (props) => {
               Group(<span className="red">*</span>):
             </label>
             <select
+              value={userData.group}
               className={
                 validInputs.group ? "form-select" : "form-select is-invalid"
               }
@@ -213,11 +254,11 @@ const ModalUser = (props) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={props.onHide}>
+        <Button variant="secondary" onClick={() => handleCloseModalUser()}>
           Close
         </Button>
         <Button variant="primary" onClick={() => handleConfirmUser()}>
-          Save
+          {action === "CREATE" ? "Save" : "Update"}
         </Button>
       </Modal.Footer>
     </Modal>
