@@ -11,6 +11,7 @@ const Register = (props) => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPasword] = useState("");
+
   const defaultValidInput = {
     isValidEmail: true,
     isValidUsername: true,

@@ -2,19 +2,35 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import "./ModalUser.scss";
-import { getListGroup } from "../../service/userService";
-import { escapeRegExp } from "lodash";
+import { getListGroup, createNewUser } from "../../service/userService";
+import _, { groupBy } from "lodash";
+import { toast } from "react-toastify";
 
 const ModalUser = (props) => {
   const [listGroup, setListGroup] = useState([]);
 
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [address, setAddress] = useState("");
-  const [gender, setGender] = useState("");
-  const [group, setGroup] = useState("");
+  const defaultUserData = {
+    email: "",
+    phone: "",
+    username: "",
+    password: "",
+    address: "",
+    gender: "",
+    group: "",
+  };
+
+  const validInputsDefault = {
+    email: true,
+    phone: true,
+    username: true,
+    password: true,
+    address: true,
+    gender: true,
+    group: true,
+  };
+
+  const [userData, setUserData] = useState(defaultUserData);
+  const [validInputs, setValidInputs] = useState(validInputsDefault);
 
   useEffect(() => {
     getGroup();
@@ -24,13 +40,64 @@ const ModalUser = (props) => {
     let res = await getListGroup();
     if (res && res.data.EC === 0) {
       setListGroup(res.data.DT);
+      if (res.data.DT && res.data.DT.length > 0) {
+        let groups = res.data.DT;
+        setUserData({ ...userData, group: groups[0].id });
+      }
     } else {
       setListGroup(res.data.EM);
     }
   };
 
+  const checkValidateInputs = () => {
+    setValidInputs(validInputsDefault);
+    console.log(userData);
+    let arr = ["email", "phone", "password", "group"];
+    let check = true;
+    for (let i = 0; i < arr.length; i++) {
+      if (!userData[arr[i]]) {
+        let _validInputs = _.cloneDeep(validInputsDefault);
+        _validInputs[arr[i]] = false;
+        setValidInputs(_validInputs);
+        toast.error(`Empty input ${arr[i]}`);
+        check = false;
+        break;
+      }
+    }
+    return check;
+  };
+
+  const handleOnChangeInput = (value, name) => {
+    console.log(`Input changed: ${name} = ${value}`);
+    let _userData = _.cloneDeep(userData);
+    _userData[name] = value;
+    setUserData(_userData);
+  };
+
+  const handleConfirmUser = async () => {
+    let check = checkValidateInputs();
+    if (check === true) {
+      let res = await createNewUser({
+        ...userData,
+        groupId: userData["group"],
+      });
+      if (res && res.data.EC === 0) {
+        toast.success(res.data.EM);
+        props.onHide();
+        setUserData({ ...defaultUserData, group: listGroup[0].id });
+      } else {
+        toast.error(res.data.EM);
+      }
+    }
+  };
+
   return (
-    <Modal show={true} size="lg" className="modal-user">
+    <Modal
+      show={props.show}
+      size="lg"
+      className="modal-user"
+      onHide={props.onHide}
+    >
       <Modal.Header closeButton>
         <Modal.Title>{props.title}</Modal.Title>
       </Modal.Header>
@@ -40,41 +107,98 @@ const ModalUser = (props) => {
             <label>
               Email (<span className="red">*</span>):
             </label>
-            <input className="form-control" type="email" />
+            <input
+              className={
+                validInputs.email ? "form-control" : "form-control is-invalid"
+              }
+              value={userData.email}
+              type="email"
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "email")
+              }
+            />
           </div>
           <div className="col-12 col-sm-6 form-group">
             <label>
               Phone Number (<span className="red">*</span>):
             </label>
-            <input className="form-control" type="text" />
+            <input
+              className={
+                validInputs.phone ? "form-control" : "form-control is-invalid"
+              }
+              type="text"
+              value={userData.phone}
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "phone")
+              }
+            />
           </div>
           <div className="col-12 col-sm-6 form-group">
             <label>User Name :</label>
-            <input className="form-control" type="password" />
+            <input
+              className="form-control"
+              type="text"
+              value={userData.username}
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "username")
+              }
+            />
           </div>
           <div className="col-12 col-sm-6 form-group">
             <label>
               Password (<span className="red">*</span>):
             </label>
-            <input className="form-control" type="password" />
+            <input
+              className={
+                validInputs.password
+                  ? "form-control"
+                  : "form-control is-invalid"
+              }
+              type="password"
+              value={userData.password}
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "password")
+              }
+            />
           </div>
           <div className="col-12 form-group">
             <label>Address:</label>
-            <input className="form-control" type="password" />
+            <input
+              className="form-control"
+              type="text"
+              value={userData.address}
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "address")
+              }
+            />
           </div>
           <div className="col-6 form-group ">
             <label>Gender:</label>
-            <select class="form-select ">
+            <select
+              className="form-select"
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "gender")
+              }
+            >
               <option defaultValue="Male" selected>
                 Male
               </option>
-              <option valdefaultValueue="Female">Female</option>
+              <option defaultValue="Female">Female</option>
               <option defaultValue="Other">Other</option>
             </select>
           </div>
           <div className="col-6 form-group ">
-            <label>Group:</label>
-            <select class="form-select ">
+            <label>
+              Group(<span className="red">*</span>):
+            </label>
+            <select
+              className={
+                validInputs.group ? "form-select" : "form-select is-invalid"
+              }
+              onChange={(event) =>
+                handleOnChangeInput(event.target.value, "group")
+              }
+            >
               {listGroup &&
                 listGroup.length > 0 &&
                 listGroup.map((item, index) => {
@@ -89,8 +213,12 @@ const ModalUser = (props) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary">Close</Button>
-        <Button variant="primary">Save</Button>
+        <Button variant="secondary" onClick={props.onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={() => handleConfirmUser()}>
+          Save
+        </Button>
       </Modal.Footer>
     </Modal>
   );
