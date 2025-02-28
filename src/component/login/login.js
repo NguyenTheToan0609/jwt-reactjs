@@ -30,17 +30,17 @@ const Login = (props) => {
       return;
     }
 
-    let dataUser = await userLogin(valueLogin, password);
-    if (dataUser && dataUser.data && dataUser.data.EC === 0) {
-      toast.success(dataUser.data.EM);
+    let res = await userLogin(valueLogin, password);
+    if (res && res.EC === 0) {
+      toast.success(res.EM);
       let data = { isAuthenticated: true, token: "token fake" };
       sessionStorage.setItem("account", JSON.stringify(data));
       history.push("/users");
       window.location.reload();
     }
 
-    if (dataUser && dataUser.data && dataUser.data.EC !== 0) {
-      toast.error(dataUser.data.EM);
+    if (res && res.data && res.EC !== 0) {
+      toast.error(res.EM);
     }
   };
 

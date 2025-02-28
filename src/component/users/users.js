@@ -27,9 +27,9 @@ const Users = (props) => {
 
   const fetchUser = async () => {
     let res = await fetchListUser(currentPage, currentLimit);
-    if (res && res.data && res.data.EC === 0) {
-      setTotalPages(res.data.DT.totalPages);
-      setListUser(res.data.DT.users);
+    if (res && res.EC === 0) {
+      setTotalPages(res.DT.totalPages);
+      setListUser(res.DT.users);
     }
   };
 
@@ -62,13 +62,17 @@ const Users = (props) => {
   const handleConfirmDelete = async () => {
     let res = await deleteUser(dataModal);
     console.log(res);
-    if (res && res.data.EC === 0) {
-      toast.success(res.data.EM);
+    if (res && res.EC === 0) {
+      toast.success(res.EM);
       await fetchUser();
       setIsShowModal(false);
     } else {
-      toast.error(res.data.EM);
+      toast.error(res.EM);
     }
+  };
+
+  const handleRefesh = async () => {
+    await fetchUser();
   };
 
   return (
@@ -80,7 +84,10 @@ const Users = (props) => {
               <h3>Manage User</h3>
             </div>
             <div className="actions">
-              <button className="btn btn-success refesh">
+              <button
+                className="btn btn-success refesh"
+                onClick={() => handleRefesh()}
+              >
                 <i class="fa fa-refresh"></i>
                 Refesh
               </button>
