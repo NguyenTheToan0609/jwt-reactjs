@@ -6,6 +6,7 @@ import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
 import ModalUser from "./ModalUser";
+import "./user.scss";
 
 const Users = (props) => {
   const [listUser, setListUser] = useState([]);
@@ -76,10 +77,13 @@ const Users = (props) => {
         <div className="manage-user-container">
           <div className="user-header">
             <div className="title">
-              <h3>Table User</h3>
+              <h3>Manage User</h3>
             </div>
             <div className="actions">
-              <button className="btn btn-success">Refesh</button>
+              <button className="btn btn-success refesh">
+                <i class="fa fa-refresh"></i>
+                Refesh
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={() => {
@@ -87,6 +91,7 @@ const Users = (props) => {
                   setActionModalUser("CREATE");
                 }}
               >
+                <i class="fa fa-plus-circle"></i>
                 Add new user
               </button>
             </div>
@@ -119,18 +124,20 @@ const Users = (props) => {
                           <td>{item.phone}</td>
                           <td>{item.Group ? item.Group.name : ""}</td>
                           <td>
-                            <button
-                              className="btn btn-warning mx-3"
+                            <span
+                              title="Edit"
+                              className="mx-3 edit"
                               onClick={() => handleEditUser(item)}
                             >
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-danger"
+                              <i class="fa fa-pencil"></i>
+                            </span>
+                            <span
+                              title="Delete"
+                              className="delete"
                               onClick={() => handleDeleteUser(item)}
                             >
-                              Delete
-                            </button>
+                              <i class="fa fa-trash"></i>
+                            </span>
                           </td>
                         </tr>
                       );

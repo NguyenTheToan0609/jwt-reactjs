@@ -1,0 +1,40 @@
+.container {
+  .manage-user-container {
+    .user-header {
+      .title {
+        margin-top: 15px;
+      }
+
+      .actions {
+        margin-top: 15px;
+        .refesh {
+          margin-right: 10px;
+        }
+
+        i {
+          padding: 5px;
+        }
+      }
+    }
+
+    .user-body {
+      .edit {
+        color: orange;
+        cursor: pointer;
+      }
+
+      th {
+        text-align: center;
+      }
+
+      tr {
+        text-align: center;
+      }
+
+      .delete {
+        color: red;
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import "./ModalUser.scss";
-import { getListGroup, createNewUser } from "../../service/userService";
+import {
+  getListGroup,
+  createNewUser,
+  updateUser,
+} from "../../service/userService";
 import _, { groupBy } from "lodash";
 import { toast } from "react-toastify";
 
@@ -15,7 +19,7 @@ const ModalUser = (props) => {
     username: "",
     password: "",
     address: "",
-    gender: "",
+    sex: "Male",
     group: "",
   };
 
@@ -25,13 +29,14 @@ const ModalUser = (props) => {
     username: true,
     password: true,
     address: true,
-    gender: true,
+    sex: true,
     group: true,
   };
 
   const [userData, setUserData] = useState(defaultUserData);
   const [validInputs, setValidInputs] = useState(validInputsDefault);
   const { action, dataModalUser } = props;
+
   useEffect(() => {
     getGroup();
   }, []);
@@ -68,7 +73,8 @@ const ModalUser = (props) => {
 
   const checkValidateInputs = () => {
     setValidInputs(validInputsDefault);
-    console.log(userData);
+    if (action === "UPDATE") return true;
+
     let arr = ["email", "phone", "password", "group"];
     let check = true;
     for (let i = 0; i < arr.length; i++) {
@@ -94,10 +100,11 @@ const ModalUser = (props) => {
   const handleConfirmUser = async () => {
     let check = checkValidateInputs();
     if (check === true) {
-      let res = await createNewUser({
-        ...userData,
-        groupId: userData["group"],
-      });
+      let res =
+        action === "CREATE"
+          ? await createNewUser({ ...userData, groupId: userData["group"] })
+          : await updateUser({ ...userData, groupId: userData["group"] });
+
       if (res && res.data.EC === 0) {
         toast.success(res.data.EM);
         props.onHide();
@@ -214,10 +221,10 @@ const ModalUser = (props) => {
           <div className="col-6 form-group ">
             <label>Gender:</label>
             <select
-              value={userData.gender}
+              value={userData.sex}
               className="form-select"
               onChange={(event) =>
-                handleOnChangeInput(event.target.value, "gender")
+                handleOnChangeInput(event.target.value, "sex")
               }
             >
               <option defaultValue="Male" selected>
