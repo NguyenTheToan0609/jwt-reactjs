@@ -39,7 +39,7 @@ const Login = (props) => {
       // window.location.reload();
     }
 
-    if (res && res.data && res.EC !== 0) {
+    if (res && res.EC !== 0) {
       toast.error(res.EM);
     }
   };
