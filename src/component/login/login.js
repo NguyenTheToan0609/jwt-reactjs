@@ -36,7 +36,7 @@ const Login = (props) => {
       let data = { isAuthenticated: true, token: "token fake" };
       sessionStorage.setItem("account", JSON.stringify(data));
       history.push("/users");
-      window.location.reload();
+      // window.location.reload();
     }
 
     if (res && res.data && res.EC !== 0) {

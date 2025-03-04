@@ -64,15 +64,12 @@ const Register = (props) => {
     let check = isValidInputs();
     if (check === true) {
       let res = await registerNewUser(email, username, phone, password);
-      let resData = res.data;
-
-      if (resData.EC === 0) {
-        toast.success(resData.EM);
+      if (res.EC === 0) {
+        toast.success(res.EM);
         history.push("/login");
       } else {
-        toast.error(resData.EM);
+        toast.error(res.EM);
       }
-      console.log("check res", res);
     }
   };
 
