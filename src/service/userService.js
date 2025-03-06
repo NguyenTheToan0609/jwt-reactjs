@@ -1,4 +1,5 @@
 // import axios from "axios";
+import { get } from "lodash";
 import axios from "../setup/axios";
 
 const registerNewUser = (email, username, phone, password) => {
@@ -43,6 +44,10 @@ const updateUser = (userData) => {
   });
 };
 
+const getUserAccount = () => {
+  return axios.get("/api/v1/account");
+};
+
 export {
   registerNewUser,
   userLogin,
@@ -51,4 +56,5 @@ export {
   getListGroup,
   createNewUser,
   updateUser,
+  getUserAccount,
 };

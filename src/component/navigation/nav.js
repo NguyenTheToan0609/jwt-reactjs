@@ -1,20 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./nav.scss";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const Nav = (props) => {
-  const [isShow, setIsShow] = useState(true);
   const location = useLocation();
-  useEffect(() => {
-    if (location.pathname === "/login") {
-      setIsShow(false);
-    }
-  }, []);
+  const { user } = useContext(UserContext);
 
-  return (
-    <>
-      {isShow === true && (
+  if ((user && user.isAuthenticated === true) || location.pathname === "/") {
+    return (
+      <>
         <div className="container-fluid">
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <NavLink className="navbar-brand " to="/">
@@ -46,9 +42,11 @@ const Nav = (props) => {
             </div>
           </nav>
         </div>
-      )}
-    </>
-  );
+      </>
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default Nav;
