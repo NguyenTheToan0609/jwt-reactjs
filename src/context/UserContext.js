@@ -3,14 +3,16 @@ import { getUserAccount } from "../service/userService";
 const UserContext = React.createContext(null);
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = React.useState({
+  const userDefaul = {
     isAuthenticated: false,
     token: "",
     account: {},
-  });
+    isLoading: true,
+  };
+  const [user, setUser] = React.useState(userDefaul);
 
   const loginContext = (userData) => {
-    setUser(userData);
+    setUser({ ...userData, isLoading: false });
   };
 
   const logout = () => {
@@ -36,8 +38,11 @@ const UserProvider = ({ children }) => {
           email,
           username,
         },
+        isLoading: false,
       };
       setUser(data);
+    } else {
+      setUser({ ...userDefaul, isLoading: false });
     }
   };
 
