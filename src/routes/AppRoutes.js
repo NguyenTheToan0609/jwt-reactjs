@@ -4,7 +4,8 @@ import Login from "../component/login/login";
 import Register from "../component/register/register";
 import Users from "../component/users/users";
 import PrivateRoutes from "./PrivateRoutes";
-
+import Project from "../component/Project/Project";
+import About from "../component/About/About";
 function AppRoutes(props) {
   return (
     <div>
@@ -23,7 +24,8 @@ function AppRoutes(props) {
         </Route> */}
 
         <PrivateRoutes path="/users" component={Users} />
-        <PrivateRoutes path="/projects" component={Users} />
+        <PrivateRoutes path="/projects" component={Project} />
+        <PrivateRoutes path="/about" component={About} />
 
         <Route exact path="/login">
           <Login />
@@ -32,8 +34,6 @@ function AppRoutes(props) {
           <Register />
         </Route>
 
-        <Route path="/about">About</Route>
-        <Route path="/contact">contact</Route>
         <Route path="*">404 Not Found</Route>
       </Switch>
     </div>
