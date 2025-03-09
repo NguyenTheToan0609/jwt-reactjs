@@ -15,11 +15,8 @@ const UserProvider = ({ children }) => {
     setUser({ ...userData, isLoading: false });
   };
 
-  const logout = () => {
-    setUser((user) => ({
-      name: "",
-      auth: false,
-    }));
+  const logout = (userData) => {
+    setUser({ ...userData, isLoading: false });
   };
 
   const fetchUser = async () => {
@@ -47,7 +44,14 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    if (
+      window.location.pathname !== "/" &&
+      window.location.pathname !== "/login"
+    ) {
+      fetchUser();
+    } else {
+      setUser({ ...user, isLoading: false });
+    }
   }, []);
 
   return (

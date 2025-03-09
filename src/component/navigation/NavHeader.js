@@ -1,14 +1,28 @@
 import React, { useState, useContext } from "react";
 import "./nav.scss";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, Link, useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
 import { NavDropdown } from "react-bootstrap";
 import { Nav } from "react-bootstrap";
+import { userLogOut } from "../../service/userService";
+import { toast } from "react-toastify";
 
 const NavHeader = (props) => {
   const location = useLocation();
-  const { user, logout } = useContext(UserContext); // Assuming you have a logout function
+  const history = useHistory();
+  const { user, logout } = useContext(UserContext);
+
+  const handleLogOut = async () => {
+    let res = await userLogOut();
+    logout();
+    if (res && +res.EC === 0) {
+      toast.success("Logout success");
+      history.push("/login");
+    } else {
+      toast.error("Logout error");
+    }
+  };
 
   if ((user && user.isAuthenticated === true) || location.pathname === "/") {
     return (
@@ -42,17 +56,23 @@ const NavHeader = (props) => {
                 </li>
               </ul>
               {/* Push the Settings dropdown to the right */}
-              <ul className="navbar-nav ms-auto">
-                <Nav.Link>Welcome Toan !</Nav.Link>
-                <li className="nav-item">
-                  <NavDropdown title="Settings">
-                    <NavDropdown.Item>Change Password</NavDropdown.Item>
-                    <NavDropdown.Item onClick={logout}>
-                      Log Out
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </li>
-              </ul>
+              {user && user.isAuthenticated === true ? (
+                <ul className="navbar-nav ms-auto">
+                  <Nav.Link>Welcome {user.account.username}!</Nav.Link>
+                  <li className="nav-item">
+                    <NavDropdown title="Settings">
+                      <NavDropdown.Item>Change Password</NavDropdown.Item>
+                      <NavDropdown.Item>
+                        <span onClick={handleLogOut}>Log Out</span>
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </li>
+                </ul>
+              ) : (
+                <Link className="nav-link ms-auto login" to="/login">
+                  Login
+                </Link>
+              )}
             </div>
           </nav>
         </div>
