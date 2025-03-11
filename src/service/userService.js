@@ -1,5 +1,4 @@
 // import axios from "axios";
-import { get } from "lodash";
 import axios from "../setup/axios";
 
 const registerNewUser = (email, username, phone, password) => {
@@ -52,6 +51,10 @@ const userLogOut = () => {
   return axios.post("/api/v1/logout");
 };
 
+const createNewRole = (roles) => {
+  return axios.post("/api/v1/role/create", [...roles]);
+};
+
 export {
   registerNewUser,
   userLogin,
@@ -62,4 +65,5 @@ export {
   updateUser,
   getUserAccount,
   userLogOut,
+  createNewRole,
 };
