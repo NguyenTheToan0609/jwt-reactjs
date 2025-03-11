@@ -54,6 +54,11 @@ const NavHeader = (props) => {
                     Project
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/roles">
+                    Roles
+                  </NavLink>
+                </li>
               </ul>
               {/* Push the Settings dropdown to the right */}
               {user && user.isAuthenticated === true ? (
