@@ -51,10 +51,6 @@ const userLogOut = () => {
   return axios.post("/api/v1/logout");
 };
 
-const createNewRole = (roles) => {
-  return axios.post("/api/v1/role/create", [...roles]);
-};
-
 export {
   registerNewUser,
   userLogin,
@@ -65,5 +61,4 @@ export {
   updateUser,
   getUserAccount,
   userLogOut,
-  createNewRole,
 };
