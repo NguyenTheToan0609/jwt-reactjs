@@ -7,6 +7,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import Project from "../component/Project/Project";
 import About from "../component/About/About";
 import Role from "../component/Role/Role";
+import GroupRoles from "../component/GroupRoles/GroupRoles";
 function AppRoutes(props) {
   return (
     <div>
@@ -28,6 +29,7 @@ function AppRoutes(props) {
         <PrivateRoutes path="/projects" component={Project} />
         <PrivateRoutes path="/about" component={About} />
         <PrivateRoutes path="/roles" component={Role} />
+        <PrivateRoutes path="/group-role" component={GroupRoles} />
 
         <Route exact path="/login">
           <Login />

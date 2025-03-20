@@ -50,6 +50,11 @@ const NavHeader = (props) => {
                   </NavLink>
                 </li>
                 <li className="nav-item">
+                  <NavLink className="nav-link" to="/group-role">
+                    Group Roles
+                  </NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink className="nav-link" to="/projects">
                     Project
                   </NavLink>
