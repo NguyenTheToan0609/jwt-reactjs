@@ -37,7 +37,13 @@ instance.interceptors.response.use(
     switch (status) {
       // authentication (token related issues)
       case 401: {
-        toast.error("Anauthorized the user . Pls login....");
+        if (
+          window.location.pathname !== "/" ||
+          window.location.pathname !== "/login" ||
+          window.location.pathname !== "/register"
+        ) {
+          toast.error("Anauthorized the user . Pls login....");
+        }
         return error.response.data;
       }
 

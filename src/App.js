@@ -6,14 +6,21 @@ import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
 import AppRoutes from "./routes/AppRoutes";
 import { UserContext } from "./context/UserContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TailSpin } from "react-loader-spinner";
+import { Scrollbars } from "react-custom-scrollbars";
 
-function App() {
+const App = () => {
   const { user } = useContext(UserContext);
+  const [scrollHeight, setScrollHeight] = useState(0);
+
+  useEffect(() => {
+    let windownHeight = window.innerHeight;
+    setScrollHeight(windownHeight);
+  }, [user]);
 
   return (
-    <>
+    <Scrollbars autoHide style={{ height: scrollHeight }}>
       <Router>
         {user && user.isLoading ? (
           <>
@@ -50,8 +57,8 @@ function App() {
         draggable
         pauseOnHover
       />
-    </>
+    </Scrollbars>
   );
-}
+};
 
 export default App;

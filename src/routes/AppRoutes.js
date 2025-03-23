@@ -8,26 +8,20 @@ import Project from "../component/Project/Project";
 import About from "../component/About/About";
 import Role from "../component/Role/Role";
 import GroupRoles from "../component/GroupRoles/GroupRoles";
+import Home from "../component/Home/Home";
 function AppRoutes(props) {
   return (
     <div>
       <Switch>
         <Route exact path="/">
-          Home
+          <Home />
         </Route>
-
-        {/*         
-        <Route exact path="/project">
-          project
+        <Route exact path="/about">
+          <About />
         </Route>
-
-        <Route path="/users">
-          <Users />
-        </Route> */}
 
         <PrivateRoutes path="/users" component={Users} />
         <PrivateRoutes path="/projects" component={Project} />
-        <PrivateRoutes path="/about" component={About} />
         <PrivateRoutes path="/roles" component={Role} />
         <PrivateRoutes path="/group-role" component={GroupRoles} />
 

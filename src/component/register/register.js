@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./register.scss";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { registerNewUser } from "../../service/userService";
+import { UserContext } from "../../context/UserContext";
 const Register = (props) => {
   let history = useHistory();
-
+  const { user } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPasword] = useState("");
+
+  useEffect(() => {
+    if (user && user.isAuthenticated) {
+      history.push("/");
+    }
+  }, []);
 
   const defaultValidInput = {
     isValidEmail: true,

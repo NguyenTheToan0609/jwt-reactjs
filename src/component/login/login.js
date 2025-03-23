@@ -10,9 +10,10 @@ import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import { userLogin } from "../../service/userService";
 import { UserContext } from "../../context/UserContext";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Login = (props) => {
-  const { loginContext } = useContext(UserContext);
+  const { user, loginContext } = useContext(UserContext);
   let history = useHistory();
   const [valueLogin, setValueLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +25,12 @@ const Login = (props) => {
   const handleCreateAccount = () => {
     history.push("/register");
   };
+
+  useEffect(() => {
+    if (user && user.isAuthenticated) {
+      history.push("/");
+    }
+  }, []);
 
   const handleLogin = async () => {
     setObjCheckInput(defaultValidInput);
@@ -122,6 +129,12 @@ const Login = (props) => {
               >
                 Create new account
               </button>
+            </div>
+            <div className="mt-3 return text-center">
+              <Link to="/">
+                <i class="fa fa-arrow-left "></i>
+                <span title="Return To HomePage">Return To HomePage</span>
+              </Link>
             </div>
           </div>
         </div>

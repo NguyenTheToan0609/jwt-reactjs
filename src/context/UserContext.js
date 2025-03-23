@@ -44,14 +44,15 @@ const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (
-      window.location.pathname !== "/" &&
-      window.location.pathname !== "/login"
-    ) {
-      fetchUser();
-    } else {
-      setUser({ ...user, isLoading: false });
-    }
+    // if (
+    //   window.location.pathname !== "/" &&
+    //   window.location.pathname !== "/login"
+    // ) {
+    // } else {
+    //   setUser({ ...user, isLoading: false });
+    // }
+
+    fetchUser();
   }, []);
 
   return (
