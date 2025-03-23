@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getListGroup } from "../../service/userService";
-import { fetchListRole, getAllRoles } from "../../service/roleService";
+import {
+  fetchListRole,
+  getAllRoles,
+  AssignRolesToGroup,
+} from "../../service/roleService";
 
 import _, { cloneDeep } from "lodash";
+import { toast } from "react-toastify";
+import { responsivePropType } from "react-bootstrap/esm/createUtilityClasses";
 function GroupRoles(props) {
   const [listGroup, setListGroup] = useState([]);
   const [listRoles, setListRoles] = useState("");
@@ -70,6 +76,36 @@ function GroupRoles(props) {
     setAssignRolesByGroup(_assignRolesByGroup);
   };
 
+  const builDataRolesToGroup = () => {
+    let result = {};
+    const _assignRolesByGroup = _.cloneDeep(assignRolesByGroup);
+    result.groupId = selectGroup;
+
+    let groupRolesFilter = _assignRolesByGroup.filter(
+      (item) => item.isAssign === true
+    );
+    let finalGroupRoles = groupRolesFilter.map((item) => {
+      let data = {
+        groupId: +selectGroup,
+        roleId: +item.id,
+      };
+      return data;
+    });
+    console.log("finalGroupRoles", finalGroupRoles);
+
+    result.groupRoles = finalGroupRoles;
+    return result;
+  };
+
+  const handleSave = async () => {
+    let data = builDataRolesToGroup();
+    let res = await AssignRolesToGroup(data);
+    console.log("data", data);
+    if (res && res.EC === 0) {
+      toast.success(res.EM);
+    }
+  };
+
   return (
     <div className="group-role-container">
       <div className="container">
@@ -128,7 +164,9 @@ function GroupRoles(props) {
         )}
 
         <div>
-          <button className="btn btn-warning mt-3">Save</button>
+          <button className="btn btn-warning mt-3" onClick={() => handleSave()}>
+            Save
+          </button>
         </div>
       </div>
     </div>

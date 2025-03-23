@@ -18,4 +18,14 @@ const getAllRoles = (groupId) => {
   return axios.get(`/api/v1/role/by-group/${groupId}`);
 };
 
-export { createNewRole, fetchListRole, deleteRole, getAllRoles };
+const AssignRolesToGroup = (data) => {
+  return axios.post("/api/v1/role/assign-to-group", { data });
+};
+
+export {
+  createNewRole,
+  fetchListRole,
+  deleteRole,
+  getAllRoles,
+  AssignRolesToGroup,
+};
